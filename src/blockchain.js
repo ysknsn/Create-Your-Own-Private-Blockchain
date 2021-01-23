@@ -73,7 +73,7 @@ class Blockchain {
             block.hash = SHA256(JSON.stringify(block)).toString();
 
             block.height = self.chain.length;
-            block.timeStamp = new Date().getTime().toString().slice(0,-3);
+            block.timestamp = new Date().getTime().toString().slice(0,-3);
     
             console.log(JSON.stringify(block.hash));
 
@@ -84,7 +84,7 @@ class Blockchain {
         .then(block => {
             
             this.chain.push(block);
-            this.height = this.chain.length - 1;
+            this.height = this.chain.length;
             return block;
         });
     }
@@ -130,8 +130,11 @@ class Blockchain {
             // * 2. Get the current time: `let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));`
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
 
+            console.log(currentTime - time);
+
             // * 3. Check if the time elapsed is less than 5 minutes
-            let isElapsed5minutes = currentTime - time >= 5*60; 
+            let isElapsed5minutes = currentTime - time < 5*60;
+            
             if (!isElapsed5minutes) {
                 reject(new Error("It hasn't been more than five minutes."))
             }
@@ -142,9 +145,8 @@ class Blockchain {
                 reject(new Error("Failed to verify message."));
             }
 
-            
             // * 5. Create the block and add it to the chain
-            let block = new BlockClass.Block({ star });
+            let block = new BlockClass.Block({ star: star, owner: address });
             
             // * 6. Resolve with the block added.
             block = await this._addBlock(block);
@@ -217,8 +219,9 @@ class Blockchain {
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
             
-            self.chain.map(function (block) {
-                if (block.validate()) {
+            self.chain.map(async function (block) {
+                let validate = await block.validate();
+                if (validate) {
                     if (block.height > 0) {
                         let previousBlockHash = self.chain[block.height - 1].hash;         
                         if (block.previousBlockHash == previousBlockHash) {
