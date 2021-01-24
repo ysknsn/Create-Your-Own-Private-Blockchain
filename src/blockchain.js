@@ -77,15 +77,11 @@ class Blockchain {
     
             console.log(JSON.stringify(block.hash));
 
-            let isSuccess = block.hash && (block.hash.length === 64) && (block.height === self.chain.length); 
+            self.chain.push(block);
+            self.height = self.chain.length + 1;
 
+            let isSuccess = block.hash && (block.hash.length === 64) && (block.height === self.chain.length); 
             isSuccess ? resolve(block) : reject(new Error('Cannot add invalid block.'));
-        }).catch(e => console.log(e.toString))
-        .then(block => {
-            
-            this.chain.push(block);
-            this.height = this.chain.length + 1;
-            return block;
         });
     }
 
