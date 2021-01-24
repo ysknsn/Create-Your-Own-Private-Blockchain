@@ -67,7 +67,7 @@ class Blockchain {
         return new Promise(async (resolve, reject) => {
             if (self.chain.length>0) {
                 // previous block hash
-                block.previousHash = self.chain[self.chain.length-1].hash;
+                block.previousBlockHash = self.chain[self.chain.length-1].hash;
             }
 
             block.hash = SHA256(JSON.stringify(block)).toString();
@@ -136,7 +136,7 @@ class Blockchain {
             let isElapsed5minutes = currentTime - time < 5*60;
             
             if (!isElapsed5minutes) {
-                reject(new Error("It hasn't been more than five minutes."))
+                return;
             }
 
             // * 4. Veify the message with wallet address and signature: `bitcoinMessage.verify(message, address, signature)`
