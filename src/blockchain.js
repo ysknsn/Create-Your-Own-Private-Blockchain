@@ -73,7 +73,7 @@ class Blockchain {
             block.hash = SHA256(JSON.stringify(block)).toString();
 
             block.height = self.chain.length;
-            block.timestamp = new Date().getTime().toString().slice(0,-3);
+            block.time = new Date().getTime().toString().slice(0,-3);
     
             console.log(JSON.stringify(block.hash));
 
@@ -84,7 +84,7 @@ class Blockchain {
         .then(block => {
             
             this.chain.push(block);
-            this.height = this.chain.length;
+            this.height = this.chain.length + 1;
             return block;
         });
     }

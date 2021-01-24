@@ -46,7 +46,7 @@ class Block {
             // Comparing if the hashes changed
             // Returning the Block is not valid
             let newHash = SHA256(JSON.stringify(self)).toString;
-            self.hash = newHash;
+            self.hash = currentHash;
             let isValid = newHash == currentHash; 
 
             // Returning the Block is valid
