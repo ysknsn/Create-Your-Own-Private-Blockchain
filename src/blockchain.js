@@ -80,6 +80,8 @@ class Blockchain {
             self.chain.push(block);
             self.height = self.chain.length + 1;
 
+            self.validateChain();
+
             let isSuccess = block.hash && (block.hash.length === 64) && (block.height === self.chain.length); 
             isSuccess ? resolve(block) : reject(new Error('Cannot add invalid block.'));
         });
